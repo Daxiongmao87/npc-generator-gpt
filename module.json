@@ -2,14 +2,14 @@
   "id": "npc-generator-gpt-test",
   "title": "NPC Generator (GPT) D&D 5e (Test)",
   "description": "NPC generator for D&D5e powered by ChatGPT",
-  "version": "1.5.5",
+  "version": "1.5.5.1",
   "compatibility": {
     "minimum": "11",
     "verified": "11.315"
   },
   "authors": [
     {
-      "name": "Halftone",
+      "name": "Halftone & daxiongmao87",
       "discord": "half.tone"
     }
   ],
