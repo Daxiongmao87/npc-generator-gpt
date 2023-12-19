@@ -78,7 +78,7 @@ export class npcGenGPTGenerateNPC extends Application {
         subtype.value = (type.value === 'commoner') ? type.value : subtype.value;
         this.data.details.optionalName = this.element.find('#name').val();
         this.data.details.sheet = (type.value === 'commoner') ? 'npc-generator-gpt.dialog.subtype.label' : 'npc-generator-gpt.dialog.subtype.class';
-        this.data.abilities = this.generateNpcAbilities(subtype.value, cr.value);
+        this.data.abilities = this.generateNpcAbilitiesGPT(subtype.value, cr.value);
         this.data.attributes = this.generateNpcAttributes(race.value, subtype.value, cr.value);
         this.data.skills = this.generateNpcSkills(race.value, subtype.value);
         this.data.traits = this.generateNpcTraits(race.value, subtype.value);
@@ -86,10 +86,11 @@ export class npcGenGPTGenerateNPC extends Application {
     }
 
     initQuery() {
-        const { optionalName, gender, race, subtype, alignment } = this.data.details;
+        const { optionalName, gender, race, subtype, alignment, optionalContext } = this.data.details;
         let options = `${gender.label}, ${race.label}, ${subtype.label}, ${alignment.label}`;
         if (optionalName) options = `(${game.i18n.localize("npc-generator-gpt.query.name")}: ${optionalName}) ${options}`; 
-        return npcGenGPTDataStructure.getGenerateQueryTemplate(options)
+        if (optionalContext) options = `(${game.i18n.localize("npc-generator-gpt.query.context")}: ${optionalContext}) ${options}`; 
+	return npcGenGPTDataStructure.getGenerateQueryTemplate(options, (optionalContext) ? true : false)
     }
 
     mergeGptData(gptData) {
@@ -97,6 +98,12 @@ export class npcGenGPTGenerateNPC extends Application {
         this.data.name = gptName;
         this.data.spells = spells;
         this.data.items = items;
+	if (gptData.strength) this.data.abilities.str.value = gptData.strength
+	if (gptData.dexterity) this.data.abilities.dex.value = gptData.dexterity
+	if (gptData.constitution) this.data.abilities.con.value = gptData.constitution
+	if (gptData.wisdom) this.data.abilities.wis.value = gptData.wisdom
+	if (gptData.intelligence) this.data.abilities.int.value = gptData.intelligence
+	if (gptData.charisma) this.data.abilities.cha.value = gptData.charisma
         this.data.details = {
             ...this.data.details,
             source: "NPC Generator (GPT)",
@@ -159,7 +166,8 @@ export class npcGenGPTGenerateNPC extends Application {
         const profAbilities = (npcSubtype === 'commoner')
             ? npcGenGPTLib.getRandomFromPool(npcStats.save.pool, npcStats.save.max)
             : npcStats.save;
-        const npcAbilities = npcGenGPTLib.getNpcAbilities(profAbilities);
+        //const npcAbilities = npcGenGPTLib.getNpcAbilities(profAbilities);
+	
         return npcGenGPTLib.scaleAbilities(npcAbilities, npcCR)
     }
 

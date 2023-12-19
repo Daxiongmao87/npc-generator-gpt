@@ -50,6 +50,7 @@
         "random": "Random",
         "name": "Name",
         "ph-name": "Optional",
+        "ph-context": "Optional",
         "type": {
             "label": "Type",
             "commoner": "Commoner",
@@ -165,7 +166,13 @@
         "roleplaying": "Roleplaying tips",
         "readaloud": "Evocative description that the GM will read to the players",
         "equip": "Equipment",
-        "spells": "Spells"
+        "spells": "Spells",
+	"strength": "Strength Score",
+	"dexterity": "Dexterity Score",
+	"constitution": "Constitution Score",
+	"wisdom": "Wisdom Score",
+	"intelligence": "Intelligence Score",
+	"charsiam": "Charisma Score"
     },
     "npc-generator-gpt.sheet": {
         "appearance": "Appearance",

@@ -16,7 +16,7 @@ export class npcGenGPTDataStructure {
     static commonerList = [
         'alchemist', 'baker', 'barkeep', 'blacksmith', 'butcher', 'carpenter',
         'cobbler', 'farmer', 'fisherman', 'guard', 'healer', 'hermit', 'hunter',
-        'innkeeper', 'merchant', 'messenger', 'miner', 'scribe', 'tailor'
+        'innkeeper', 'merchant', 'messenger', 'miner', 'scribe', 'tailor', 'custom'
     ];
     static npcList = [
         'barbarian', 'bard', 'cleric', 'druid', 'fighter', 'monk',
@@ -35,7 +35,7 @@ export class npcGenGPTDataStructure {
         "aarakocra", "abyssal", "aquan", "auran", "celestial", "common", 
         "draconic", "druidic", "elvish", "deep", "cant", "giant", "gith",
         "gnoll", "gnomish", "goblin", "halfling", "ignan", "infernal",
-        "dwarvish", "orc", "primordial", "sylvan", "undercommon", "terran"
+        "dwarvish", "orc", "primordial", "sylvan", "undercommon", "terran", "custom"
     ];
 
     static raceData = {
@@ -77,16 +77,24 @@ export class npcGenGPTDataStructure {
 
     static hpDice = { tiny: 4, sm: 6, med: 8, lg: 10, huge: 12, grg: 20 };
 
-    static getGenerateQueryTemplate(options) { 
-        return `${game.i18n.format("npc-generator-gpt.query.generate", { userQuery: options })}\n{
+    static getGenerateQueryTemplate(options, withAbilities) { 
+	template = `${game.i18n.format("npc-generator-gpt.query.generate", { userQuery: options })}\n{
             "name": "${game.i18n.localize("npc-generator-gpt.query.name")}",
             "background": "${game.i18n.localize("npc-generator-gpt.query.background")}",
             "appearance": "${game.i18n.localize("npc-generator-gpt.query.appearance")}",
             "roleplaying": "${game.i18n.localize("npc-generator-gpt.query.roleplaying")}",
             "readaloud": "${game.i18n.localize("npc-generator-gpt.query.readaloud")}",
             "items": "${game.i18n.localize("npc-generator-gpt.query.equip")} (array)",
-            "spells": "${game.i18n.localize("npc-generator-gpt.query.spells")} (array)",
-        }`
+            "spells": "${game.i18n.localize("npc-generator-gpt.query.spells")} (array)"`
+	if (withAbilities) template = template + `, 
+	    "strength":"${game.i18n.localize("npc-generator-gpt.query.background")}",
+	    "dexterity":"${game.i18n.localize("npc-generator-gpt.query.background")}",
+	    "constitution":"${game.i18n.localize("npc-generator-gpt.query.")}",
+	    "wisdom":"${game.i18n.localize("npc-generator-gpt.query.wisdom")}",
+	    "intelligence":"${game.i18n.localize("npc-generator-gpt.query.intelligence")}",
+	    "charisma":"${game.i18n.localize("npc-generator-gpt.query.charisma")}"`
+	template = template + `}`
+	return template
     }
 
     static getEnhanceQueryTemplate(options) { 
