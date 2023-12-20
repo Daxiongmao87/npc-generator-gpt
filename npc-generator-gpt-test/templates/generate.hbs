@@ -13,8 +13,8 @@
         </select>
     </div>
     {{/each}}
-    <div>
-        <label for="context">{{localize "npc-generator-gpt.dialog.context"}}:</label>
+    <div style="padding-bottom:96px;">
+        <label for="context" style="float: none;">{{localize "npc-generator-gpt.dialog.context"}}:</label>
         <textarea id="context" rows="4" placeholder="{{localize "npc-generator-gpt.dialog.ph-context"}}"></textarea>
     </div>
     <button type="submit" id="npcGenGPT_create-btn">{{localize 'npc-generator-gpt.dialog.button'}}</button>

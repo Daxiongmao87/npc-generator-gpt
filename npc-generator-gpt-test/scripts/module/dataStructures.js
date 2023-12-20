@@ -37,7 +37,6 @@ export class npcGenGPTDataStructure {
         "gnoll", "gnomish", "goblin", "halfling", "ignan", "infernal",
         "dwarvish", "orc", "primordial", "sylvan", "undercommon", "terran", "custom"
     ];
-
     static raceData = {
         dragonborn: { movement: { walk: 30 }, size: "med", senses: { darkvision: 0 }, lang: ["common", "draconic"] },
         dwarf: { movement: { walk: 25 }, size: "med", senses: { darkvision: 60 }, lang: ["common", "dwarvish"] },
@@ -77,9 +76,11 @@ export class npcGenGPTDataStructure {
 
     static hpDice = { tiny: 4, sm: 6, med: 8, lg: 10, huge: 12, grg: 20 };
 
-    static getGenerateQueryTemplate(options, context) { 
+    static getGenerateQueryTemplate(options, context, details) { 
+	console.log(details);
 	let template = '';
-	if (context) template = `${game.i18n.format("npc-generator-gpt.query.generateContext", { userQuery: options, additionalContext: context })}\n{
+	if (context) {
+		template = `${game.i18n.format("npc-generator-gpt.query.generateContext", { userQuery: options, additionalContext: context })}\n{
             "name": "${game.i18n.localize("npc-generator-gpt.query.name")}",
             "background": "${game.i18n.localize("npc-generator-gpt.query.background")}",
             "appearance": "${game.i18n.localize("npc-generator-gpt.query.appearance")}",
@@ -87,12 +88,22 @@ export class npcGenGPTDataStructure {
             "readaloud": "${game.i18n.localize("npc-generator-gpt.query.readaloud")}",
             "items": "${game.i18n.localize("npc-generator-gpt.query.equip")} (array)",
             "spells": "${game.i18n.localize("npc-generator-gpt.query.spells")} (array)",
-	    "strength":"${game.i18n.localize("npc-generator-gpt.query.background")}",
-	    "dexterity":"${game.i18n.localize("npc-generator-gpt.query.background")}",
-	    "constitution":"${game.i18n.localize("npc-generator-gpt.query.")}",
+	    "strength":"${game.i18n.localize("npc-generator-gpt.query.strength")}",
+	    "dexterity":"${game.i18n.localize("npc-generator-gpt.query.strength")}",
+	    "constitution":"${game.i18n.localize("npc-generator-gpt.query.constitution")}",
 	    "wisdom":"${game.i18n.localize("npc-generator-gpt.query.wisdom")}",
 	    "intelligence":"${game.i18n.localize("npc-generator-gpt.query.intelligence")}",
-	    "charisma":"${game.i18n.localize("npc-generator-gpt.query.charisma")}"}`
+	    "charisma":"${game.i18n.localize("npc-generator-gpt.query.charisma")}"`
+	    if (details.gender.value === 'random') template = template + `", gender": "${game.i18n.localize("npc-generator-gpt.query.gender")}"`
+	    if (details.race.value === 'random') template = template + `", race": "${game.i18n.format("npc-generator-gpt.query.race", { raceList: npcGenGPTDataStructure.raceList })}"`
+	    if (details.subtype.label === 'Random') {
+	    	    if (details.type.value === 'commoner') template = template + `", commoner": "${game.i18n.localize("npc-generator-gpt.query.commoner")}"`
+		    else template = template + `", npc": "${game.i18n.format("npc-generator-gpt.query.npc", { npcList: npcGenGPTDataStructure.npcList })}"`
+	    }
+	    if (details.alignment.value === 'random') template = template + `", alignment": "${game.i18n.format("npc-generator-gpt.query.alignment", { alignmentList: npcGenGPTDataStructure.alignmentList})}"`
+	    if (details.cr.value === 'random') template = template + `", challenge_rating": "${game.i18n.localize("npc-generator-gpt.query.cr")}"`
+	    template = template + `}`
+	}
 	else template = `${game.i18n.format("npc-generator-gpt.query.generate", { userQuery: options})}\n{
             "name": "${game.i18n.localize("npc-generator-gpt.query.name")}",
             "background": "${game.i18n.localize("npc-generator-gpt.query.background")}",
