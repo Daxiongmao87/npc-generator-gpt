@@ -2,7 +2,7 @@ import { npcGenGPTDataStructure } from "./dataStructures.js"
 import { Fuse } from "../lib/fuse.mjs"
 
 export const COSTANTS = {
-    MODULE_ID: "npc-generator-gpt",
+    MODULE_ID: "npc-generator-gpt-test",
     LOG_PREFIX: "NPC Generator (GPT) |",
     API_URL: "https://api.openai.com/v1/chat/completions",
     TEMPLATE: {
@@ -50,7 +50,7 @@ export class npcGenGPTLib {
         return {
             method: "POST",
             body: JSON.stringify({
-                "model": "gpt-3.5-turbo",
+                "model": `${game.settings.get(COSTANTS.MODULE_ID, "model")}`,
                 "messages": [
                     {
                         "role": "user",
@@ -120,9 +120,9 @@ export class npcGenGPTLib {
         return options;
     }
 
-    static getSelectedOption(category) {
+    static getSelectedOption(category, context) {
         let selectedOption = category.find("option:selected");
-        if (selectedOption.val() === 'random') {
+        if (selectedOption.val() === 'random' && context === '') {
             const options = category.find("option:not([value='random'])");
             selectedOption = options.eq(Math.floor(Math.random() * options.length));
         }
@@ -335,5 +335,27 @@ export class npcGenGPTLib {
         const roll = new Roll(formula).evaluate({ async: false });
         if (!returnArray) return roll.total
         else return roll.dice[0].results
+    }
+
+    static levenshteinDistance(a, b) {
+        const matrix = Array.from({ length: b.length + 1 }, (_, i) => [i]);
+        matrix[0] = Array.from({ length: a.length + 1 }, (_, j) => j);
+
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                matrix[i][j] = b[i - 1] === a[j - 1] ?
+                    matrix[i - 1][j - 1] :
+                    Math.min(matrix[i - 1][j - 1] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j] + 1);
+            }
+        }
+
+        return matrix[b.length][a.length];
+    }
+
+    static fuzzyCompare(input, stringArray, threshold = 2) {
+        return stringArray
+            .map(str => ({ string: str, distance: npcGenGPTLib.levenshteinDistance(input, str) }))
+            .filter(item => item.distance <= threshold)
+            .sort((a, b) => a.distance - b.distance);
     }
 }

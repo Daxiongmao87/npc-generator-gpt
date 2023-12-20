@@ -63,6 +63,14 @@ export class npcGenGPTSettings {
 			default: '',
 			type: String
 		});
+		game.settings.register(COSTANTS.MODULE_ID, "model", {
+			name: game.i18n.localize("npc-generator-gpt.settings.model.name"),
+			hint: game.i18n.localize("npc-generator-gpt.settings.model.hint"),
+			scope: "client",
+			config: true,
+			default: 'gpt-3.5-turbo',
+			type: String
+		});
 		game.settings.register(COSTANTS.MODULE_ID, "temperature", {
 			name: game.i18n.localize("npc-generator-gpt.settings.temperature.name"),
 			hint: game.i18n.localize("npc-generator-gpt.settings.temperature.hint"),

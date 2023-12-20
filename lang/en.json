@@ -25,6 +25,10 @@
             "name": "API Key",
             "hint": "Your private OpenAI API key. [https://platform.openai.com/account/api-keys]"
         },
+        "model": {
+            "name": "Model",
+            "hint": "The openai model you wish to use.  WARNING! costs will vary depending on your model, choose wisely. [Models: https://platform.openai.com/docs/models, Pricing: https://openai.com/pricing]"
+        },
         "temperature": {
             "name": "Temperature",
             "hint": "This parameter affects the \"creativity\" of the model's responses. Higher values (close to 1) make the responses more random, while lower values (close to 0) make them more deterministic and focused. A high value might lead to greater variety in responses, but could also produce less predictable output."
@@ -49,6 +53,7 @@
         "buttonPending": "Connecting...",
         "random": "Random",
         "name": "Name",
+	"context": "Context",
         "ph-name": "Optional",
         "ph-context": "Optional",
         "type": {
@@ -107,7 +112,8 @@
             "messenger": "Messenger",
             "miner": "Miner",
             "scribe": "Scribe",
-            "tailor": "Tailor"
+            "tailor": "Tailor",
+	    "custom": "Custom"
         },
         "npc": {
             "barbarian": "Barbarian",
@@ -165,15 +171,21 @@
         "background": "Short biography",
         "appearance": "Appearance",
         "roleplaying": "Roleplaying tips",
-        "readaloud": "Evocative description that the GM will read to the players",
-        "equip": "Equipment",
-        "spells": "Spells",
-	"strength": "Strength Score",
-	"dexterity": "Dexterity Score",
-	"constitution": "Constitution Score",
-	"wisdom": "Wisdom Score",
-	"intelligence": "Intelligence Score",
-	"charisma": "Charisma Score"
+        "readaloud": "Evocative visualization of the character that the GM will read to the players, painting a picture with words.  Begin with: \"You see before you ...\"",
+        "equip": "Known loot, equipment, clothes, etc from D&D 5e material (based on Context, CR, and Profession/Class)",
+        "spells": "Spells from D&D 5e material",
+	"strength": "Strength Score (based on 4d6 drop lowest, Profession/Class, CR, and Context)",
+	"dexterity": "Dexterity Score (based on 4d6 drop lowest, Profession/Class, CR, and Context)",
+	"constitution": "Constitution Score (based on 4d6 drop lowest, Profession/Class, CR, and Context)",
+	"wisdom": "Wisdom Score (based on 4d6 drop lowest, Profession/Class, CR, and Context)",
+	"intelligence": "Intelligence Score (based on 4d6 drop lowest, Profession/Class, CR, and Context)",
+	"charisma": "Charisma Score (based on 4d6 drop lowest, Profession/Class, CR, and Context)",
+	"gender": "Gender (Based on Context, Male or Female)",
+	"race": "THE ONLY VALID VALUES: {raceList}",
+	"commoner": "commoner role/profession (based on Context)",
+	"npc": "THE ONLY VALID VALUES: {npcList}",
+	"alignment": "2-character format of D&D 5e alignments: {alignmentList}",
+	"cr": "Challenge Rating (CR) (based on Context)"
     },
     "npc-generator-gpt.sheet": {
         "appearance": "Appearance",
