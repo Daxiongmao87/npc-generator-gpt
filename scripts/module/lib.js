@@ -234,19 +234,19 @@ export class npcGenGPTLib {
             difHp = 5;
             maxHp = 6;
         } else if (npcCR == 0.125) {
-            difHp = 28;
-            maxHp = 35;
+            difHp = 15;
+            maxHp = 25;
         } else if (npcCR == 0.25) {
-            difHp = 13;
-            maxHp = 49;
+            difHp = 17;
+            maxHp = 30;
         } else if (npcCR == 0.5) {
             difHp = 20;
-            maxHp = 70;
+            maxHp = 35;
         } else if (npcCR <= 19) {
-            difHp = 14;
-            maxHp = 70 + 15 * npcCR;
+            difHp = 12 * npcCR;
+            maxHp = 25 + 17 * npcCR;
         } else {
-            difHp = 44;
+            difHp = 2 * npcCr;
             maxHp = 400 + 45 * (npcCR - 20);
         }
 

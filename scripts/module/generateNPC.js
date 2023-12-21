@@ -94,7 +94,7 @@ export class npcGenGPTGenerateNPC extends Application {
 	};
 	data.gender.gpt = gptData.gender;
 	data.race.gpt = gptData.race;
-	data.commoner.gpt = gptData.commoner;
+	data.commoner.gpt = (gptData.job) ? gptData.job : "None";
 	data.npc.gpt = gptData.npc;
 	data.alignment.gpt = gptData.alignment;
 	data.cr.gpt = gptData.challenge_rating;
@@ -133,8 +133,23 @@ export class npcGenGPTGenerateNPC extends Application {
 				data[key].value = data[key].gpt;
 				this.data.details[key].value = data[key].value;
 			}
+			else if (key === 'race') {
+				let raceLabellocalizationKeysArray=Object.keys(localizationKeys);
+				let raceDataKeysArray = Object.keys(npcGenGPTDataStructure.raceData);
+				let raceLabel=data[key].gpt;
+				let raceData=data[key].value.replace(/-.*$/, '');
+				let raceLabelLocalization=npcGenGPTLib.fuzzyCompare(raceLabel, raceLabellocalizationKeysArray, 100)[0].string;
+				let raceLabelLocalizationValue=game.i18n.localize("npc-generator-gpt.dialog." + key + "." + raceLabelLocalization);
+				let raceDataValue= npcGenGPTLib.fuzzyCompare(raceData, raceDataKeysArray, 100)[0].string;
+				console.log("RACE:");
+				console.log(raceLabel + " vs " + raceLabelLocalizationValue);
+				console.log(raceData + " vs " + raceDataValue);
+				data[key].label = raceLabelLocalizationValue;
+				data[key].value = raceDataValue;
+				this.data.details[key].label = data[key].label;
+				this.data.details[key].value = data[key].value;
+			}
 			else {
-				if (key === 'race') localizationKeys = npcGenGPTDataStructure.raceData;
 				console.log("Localization Keys!");
 				console.log(localizationKeys);
 				let localizationKeysArray=Object.keys(localizationKeys);
@@ -149,27 +164,22 @@ export class npcGenGPTGenerateNPC extends Application {
 				this.data.details[key].label = data[key].label;
 				this.data.details[key].value = data[key].value;
 			}
+			console.log(data[key].label + ", " + data[key].value);
 		}
 	}
     }
     generateNonGPTData() {
         const { cr, race, type, subtype } = this.data.details;
         this.data.abilities = this.generateNpcAbilities(subtype.value, cr.value);
-        this.data.attributes = this.generateNpcAttributes(this.data.details.race.value, subtype.value, cr.value);
+        this.data.attributes = this.generateNpcAttributes(race.value, subtype.value, cr.value);
         this.data.skills = this.generateNpcSkills(race.value, subtype.value);
         this.data.traits = this.generateNpcTraits(race.value, subtype.value);
         this.data.currency = npcGenGPTLib.getNpcCurrency(cr.value);
     }
     initQuery() {
+	let flaws = [ "flawless physical features", "minor physical flaw", "minor physical flaws", "few physical flaws", "many physical flaws", "major physical flaw", "major physical flaws", "extreme physical flaw" ];
+	this.data.details.flawSize = flaws[Math.floor(Math.random() * flaws.length)];
         const { optionalName, gender, race, type, subtype, alignment, cr, optionalContext } = this.data.details;
-	if (gender.label === 'Random') gender.label === 'gender based on context';
-	if (race.label === 'Random') race.label === 'race based on context';
-	if (subtype.label === 'Random') {
-		if (type.label === 'Commoner') subtype.label === 'profession based on context';
-		else subtype.label === 'profession based on context';
-	}
-	if (alignment.label === 'Random') alignment.label === 'alignment based on context';
-	if (cr.label === 'Random') cr.label === 'alignment based on context';
         let options = `${gender.label}, ${race.label}, ${subtype.label}, ${alignment.label}, ${cr.label}`;
         if (optionalName) options = `(${game.i18n.localize("npc-generator-gpt.query.name")}: ${optionalName}) ${options}`; 
         if (optionalContext) options = `(${game.i18n.localize("npc-generator-gpt.query.context")}: ${optionalContext}) ${options}`; 

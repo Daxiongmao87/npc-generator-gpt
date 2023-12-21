@@ -83,10 +83,13 @@ export class npcGenGPTDataStructure {
 		template = `${game.i18n.format("npc-generator-gpt.query.generateContext", { userQuery: options, additionalContext: context })}\n{
             "name": "${game.i18n.localize("npc-generator-gpt.query.name")}",
             "background": "${game.i18n.localize("npc-generator-gpt.query.background")}",
+	    "age": "${game.i18n.localize("npc-generator-gpt.query.age")}", // attempt to limit the amount of supermodels
+	    "attractiveness": "${game.i18n.localize("npc-generator-gpt.query.attractiveness")}",
+	    "visual_flaws": "${game.i18n.format("npc-generator-gpt.query.visual_flaws", { flawSize: details.flawSize})}",
             "appearance": "${game.i18n.localize("npc-generator-gpt.query.appearance")}",
             "roleplaying": "${game.i18n.localize("npc-generator-gpt.query.roleplaying")}",
             "readaloud": "${game.i18n.localize("npc-generator-gpt.query.readaloud")}",
-            "items": "${game.i18n.localize("npc-generator-gpt.query.equip")} (array)",
+            "items": "${game.i18n.localize("npc-generator-gpt.query.items")} (array)",
             "spells": "${game.i18n.localize("npc-generator-gpt.query.spells")} (array)",
 	    "strength":"${game.i18n.localize("npc-generator-gpt.query.strength")}",
 	    "dexterity":"${game.i18n.localize("npc-generator-gpt.query.strength")}",
@@ -97,7 +100,7 @@ export class npcGenGPTDataStructure {
 	    if (details.gender.value === 'random') template = template + `", gender": "${game.i18n.localize("npc-generator-gpt.query.gender")}"`
 	    if (details.race.value === 'random') template = template + `", race": "${game.i18n.format("npc-generator-gpt.query.race", { raceList: npcGenGPTDataStructure.raceList })}"`
 	    if (details.subtype.label === 'Random') {
-	    	    if (details.type.value === 'commoner') template = template + `", commoner": "${game.i18n.localize("npc-generator-gpt.query.commoner")}"`
+	    	    if (details.type.value === 'commoner') template = template + `", job": "${game.i18n.localize("npc-generator-gpt.query.job")}"`
 		    else template = template + `", npc": "${game.i18n.format("npc-generator-gpt.query.npc", { npcList: npcGenGPTDataStructure.npcList })}"`
 	    }
 	    if (details.alignment.value === 'random') template = template + `", alignment": "${game.i18n.format("npc-generator-gpt.query.alignment", { alignmentList: npcGenGPTDataStructure.alignmentList})}"`
@@ -110,7 +113,7 @@ export class npcGenGPTDataStructure {
             "appearance": "${game.i18n.localize("npc-generator-gpt.query.appearance")}",
             "roleplaying": "${game.i18n.localize("npc-generator-gpt.query.roleplaying")}",
             "readaloud": "${game.i18n.localize("npc-generator-gpt.query.readaloud")}",
-            "items": "${game.i18n.localize("npc-generator-gpt.query.equip")} (array)",
+            "items": "${game.i18n.localize("npc-generator-gpt.query.items")} (array)",
             "spells": "${game.i18n.localize("npc-generator-gpt.query.spells")} (array)"}`
 	return template
     }
